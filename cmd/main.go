@@ -3,19 +3,15 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/odysseymorphey/vkTestRESTAPI/internal/application"
 )
 
 func main() {
-	// TODO: Init config
+	a := &application.Application{}
 
-	// TODO: Init logger
-
-	//TODO: Init storage
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello", r.URL.String())
-	})
-
-	http.ListenAndServe(":8080", nil)
-	fmt.Println("Penis")
+	a.Build("/nahui")
+	a.GetCFG()
+	
+	a.Run()
 }

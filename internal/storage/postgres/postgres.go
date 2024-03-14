@@ -44,3 +44,5 @@ func NewStorage(log *zap.SugaredLogger, dsn string) (*Storage, error) {
 
 	return st, nil
 }
+
+// func (s *Storage) ?
