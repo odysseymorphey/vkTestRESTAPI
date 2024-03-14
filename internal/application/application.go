@@ -78,12 +78,12 @@ func (a *Application) initConfig() *zap.SugaredLogger {
 }
 
 func (a *Application) buildPostgresStorage() *postgres.Storage {
-	st, err := postgres.NewStorage(a.log, a.cfg.PostgresDSN())
+	db, err := postgres.NewStorage(a.log, a.cfg.PostgresDSN())
 	if err != nil {
 		a.log.Fatal()
 	}
 
-	return st
+	return db
 }
 
 // func (a *Application) buildService() *cases.Service {

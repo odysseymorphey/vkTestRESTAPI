@@ -23,12 +23,12 @@ func NewStorage(log *zap.SugaredLogger, dsn string) (*Storage, error) {
 		return nil, errors.New("Empty dsn")
 	}
 
-	st := &Storage{
+	db := &Storage{
 		log: log,
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-	st.cancel = cancel
+	db.cancel = cancel
 
 	conn, err := pgxpool.New(ctx, dsn)
 	if err != nil {
@@ -40,9 +40,9 @@ func NewStorage(log *zap.SugaredLogger, dsn string) (*Storage, error) {
 		return nil, err
 	}
 
-	st.db = conn
+	db.db = conn
 
-	return st, nil
+	return db, nil
 }
 
 func (s *Storage) Close() {
