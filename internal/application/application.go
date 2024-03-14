@@ -3,7 +3,7 @@ package application
 import (
 	"context"
 
-	"github.com/odysseymorphey/vkTestRESTAPI/internal/cases"
+	// "github.com/odysseymorphey/vkTestRESTAPI/internal/cases"
 	"github.com/odysseymorphey/vkTestRESTAPI/internal/config"
 	"github.com/odysseymorphey/vkTestRESTAPI/internal/storage/postgres"
 	"go.uber.org/zap"
@@ -49,6 +49,6 @@ func (a *Application) buildPostgresStorage() *postgres.Storage {
 	return st
 }
 
-func (a *Application) buildService() *cases.Service {
+// func (a *Application) buildService() *cases.Service {
 
-}
+// }

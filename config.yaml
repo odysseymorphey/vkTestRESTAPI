@@ -1,0 +1,3 @@
+---
+storage:
+  postgres: postgres://fredacha:admin@localhost:5432/postgres
