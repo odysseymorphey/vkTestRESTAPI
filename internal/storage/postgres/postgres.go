@@ -49,3 +49,7 @@ func (s *Storage) Close() {
 	s.db.Close()
 	s.cancel()
 }
+
+func (s *Storage) AddNewActor() {
+	
+}

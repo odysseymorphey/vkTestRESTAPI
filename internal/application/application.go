@@ -18,7 +18,7 @@ type Application struct {
 	log     *zap.SugaredLogger
 	cfg     *config.Config
 	storage *postgres.Storage
-	server *server.Server
+	server  *server.Server
 }
 
 func (a *Application) Build(configPath string) {
