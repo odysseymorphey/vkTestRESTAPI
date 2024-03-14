@@ -17,4 +17,6 @@ func main() {
 	a := &application.Application{}
 
 	a.Build(configPath)
+
+	a.Run()
 }

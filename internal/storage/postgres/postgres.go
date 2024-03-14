@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
@@ -46,4 +45,7 @@ func NewStorage(log *zap.SugaredLogger, dsn string) (*Storage, error) {
 	return st, nil
 }
 
-// func (s *Storage) ?
+func (s *Storage) Close() {
+	s.db.Close()
+	s.cancel()
+}

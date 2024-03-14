@@ -26,3 +26,7 @@ func NewConfig(configPath string) (*Config, error) {
 func (c *Config) PostgresDSN() string {
 	return c.cfg.String("storage.postgres")
 }
+
+func (c *Config) ServerPort() int {
+	return c.cfg.Int("server.port")
+}
