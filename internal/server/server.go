@@ -25,8 +25,8 @@ func NewServer(log *zap.SugaredLogger, port int) (*Server, error) {
 		log: log,
 	}
 
-	mux.HandleFunc("/api/get_user", getUser)
-
+	mux.HandleFunc("/api/get_user", mock)
+	
 	return server, nil
 }
 
@@ -56,8 +56,4 @@ func (s *Server) stopProcess(ctx context.Context) {
 	if err := s.server.Shutdown(ctx); err != nil {
 		s.log.Error(err)
 	}
-}
-
-func getUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("MOCHA"))
 }
