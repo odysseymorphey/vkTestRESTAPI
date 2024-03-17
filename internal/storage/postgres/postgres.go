@@ -65,5 +65,27 @@ func (s *Storage) CreateActor(ctx context.Context, actor dto.Actor) error {
 	return err
 }
 
-//func (s *Storage) UpdateActor(ctx context.Context, actor dto.Actor) error {
-//}
+func (s *Storage) UpdateActor(ctx context.Context, actor dto.Actor) error {
+	query := `UPDATE actors
+			  SET actor_name = $2, gender = $3, birthdate = $4
+			  WHERE actor_id = $1`
+
+	_, err := s.db.Exec(ctx, query, actor.ID, actor.Name, actor.Gender, actor.BirthDate)
+	if err != nil {
+		s.log.Error(nil)
+	}
+
+	return err
+}
+
+func (s *Storage) DeleteActor(ctx context.Context, id int) error {
+	query := `DELETE FROM actors
+			  WHERE actor_id = $1`
+
+	_, err := s.db.Exec(ctx, query, id)
+	if err != nil {
+		s.log.Error(err)
+	}
+
+	return err
+}

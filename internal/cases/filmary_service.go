@@ -44,3 +44,12 @@ func (s *FilmaryService) UpdateActor(ctx context.Context, actor dto.Actor) error
 
 	return err
 }
+
+func (s *FilmaryService) DeleteActor(ctx context.Context, id int) error {
+	err := s.storage.DeleteActor(ctx, id)
+	if err != nil {
+		s.log.Error(err)
+	}
+
+	return err
+}
