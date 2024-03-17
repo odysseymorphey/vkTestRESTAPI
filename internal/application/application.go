@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"github.com/odysseymorphey/vkTestRESTAPI/internal/cases"
 	"os"
 	"os/signal"
 	"syscall"
@@ -32,9 +33,9 @@ func (a *Application) Build(configPath string) {
 
 	a.storage = a.buildPostgresStorage()
 
-	// svc := a.buildService(a.storage)
+	svc := a.buildService(a.storage)
 
-	a.server = a.buildServer()
+	a.server = a.buildServer(svc)
 
 }
 
@@ -52,7 +53,7 @@ func (a *Application) Run() {
 
 	go func() {
 		select {
-		case <- sig:
+		case <-sig:
 		case <-ctx.Done():
 		}
 
@@ -80,18 +81,23 @@ func (a *Application) initConfig() *zap.SugaredLogger {
 func (a *Application) buildPostgresStorage() *postgres.Storage {
 	db, err := postgres.NewStorage(a.log, a.cfg.PostgresDSN())
 	if err != nil {
-		a.log.Fatal()
+		a.log.Fatal(err)
 	}
 
 	return db
 }
 
-// func (a *Application) buildService() *cases.Service {
+func (a *Application) buildService(storage cases.Storage) *cases.FilmaryService {
+	svc, err := cases.NewFilmaryService(a.log, storage)
+	if err != nil {
+		a.log.Fatal(err)
+	}
 
-// }
+	return svc
+}
 
-func (a *Application) buildServer() *server.Server {
-	srv, err := server.NewServer(a.log, a.cfg.ServerPort())
+func (a *Application) buildServer(svc *cases.FilmaryService) *server.Server {
+	srv, err := server.NewServer(a.log, svc, a.cfg.ServerPort())
 	if err != nil {
 		a.log.Fatal(err)
 	}

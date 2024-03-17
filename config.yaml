@@ -1,5 +1,5 @@
 ---
 storage:
-  postgres: postgres://fredacha:admin@localhost:5432/postgres
+  postgres: postgres://fredacha:admin@localhost:5432/vktest
 server:
   port: 8080

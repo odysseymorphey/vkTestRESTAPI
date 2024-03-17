@@ -11,22 +11,25 @@ import (
 
 type Server struct {
 	router *http.ServeMux
-	port int
-	log *zap.SugaredLogger
+	port   int
+	log    *zap.SugaredLogger
 	server *http.Server
+	svc    FilmaryService
 }
 
-func NewServer(log *zap.SugaredLogger, port int) (*Server, error) {
+func NewServer(log *zap.SugaredLogger, svc FilmaryService, port int) (*Server, error) {
 	mux := http.NewServeMux()
 
 	server := &Server{
 		router: mux,
-		port: port,
-		log: log,
+		port:   port,
+		log:    log,
+		svc:    svc,
 	}
 
-	mux.HandleFunc("/api/get_user", mock)
-	
+	mux.HandleFunc("/createActor", server.createActor)
+	mux.HandleFunc("/updateActor", server.updateActor)
+
 	return server, nil
 }
 
@@ -37,7 +40,7 @@ func (s *Server) Run(ctx context.Context) {
 	go s.stopProcess(ctx)
 
 	s.server = &http.Server{
-		Addr: addr,
+		Addr:    addr,
 		Handler: s.router,
 	}
 
@@ -50,7 +53,7 @@ func (s *Server) Run(ctx context.Context) {
 func (s *Server) stopProcess(ctx context.Context) {
 	<-ctx.Done()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := s.server.Shutdown(ctx); err != nil {

@@ -9,6 +9,16 @@
             "database": "postgres",
             "username": "fredacha",
             "password": "admin"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "vkTest",
+            "database": "vktest",
+            "username": "fredacha",
+            "password": "admin"
         }
     ]
 }

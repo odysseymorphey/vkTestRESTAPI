@@ -2,9 +2,11 @@ package postgres
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"github.com/odysseymorphey/vkTestRESTAPI/internal/dto"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -16,11 +18,11 @@ type Storage struct {
 
 func NewStorage(log *zap.SugaredLogger, dsn string) (*Storage, error) {
 	if log == nil {
-		return nil, errors.New("Empty logger")
+		return nil, errors.WithMessage(errors.New("Invalid parameters"), "Empty logger")
 	}
 
 	if dsn == "" {
-		return nil, errors.New("Empty dsn")
+		return nil, errors.WithMessage(errors.New("Invalid parameters"), "Empty dsn")
 	}
 
 	db := &Storage{
@@ -39,6 +41,7 @@ func NewStorage(log *zap.SugaredLogger, dsn string) (*Storage, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("Connection pinged")
 
 	db.db = conn
 
@@ -50,6 +53,17 @@ func (s *Storage) Close() {
 	s.cancel()
 }
 
-func (s *Storage) AddNewActor() {
-	
+func (s *Storage) CreateActor(ctx context.Context, actor dto.Actor) error {
+	query := `INSERT INTO actors (actor_name, gender, birthdate) 
+			  VALUES ($1, $2, $3)`
+
+	_, err := s.db.Exec(ctx, query, actor.Name, actor.Gender, actor.BirthDate)
+	if err != nil {
+		s.log.Error(nil)
+	}
+
+	return err
 }
+
+//func (s *Storage) UpdateActor(ctx context.Context, actor dto.Actor) error {
+//}
