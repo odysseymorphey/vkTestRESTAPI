@@ -89,3 +89,7 @@ func (s *Storage) DeleteActor(ctx context.Context, id int) error {
 
 	return err
 }
+
+func (s *Storage) CreateMovie(ctx context.Context, movie dto.Movie) error {
+	panic(".")
+}
