@@ -79,10 +79,18 @@ func (s *Storage) UpdateActor(ctx context.Context, actor dto.Actor) error {
 }
 
 func (s *Storage) DeleteActor(ctx context.Context, id int) error {
-	query := `DELETE FROM actors
+	query := `DELETE FROM relations
 			  WHERE actor_id = $1`
 
 	_, err := s.db.Exec(ctx, query, id)
+	if err != nil {
+		s.log.Error(err)
+	}
+
+	query = `DELETE FROM actors
+			 WHERE actor_id = $1`
+
+	_, err = s.db.Exec(ctx, query, id)
 	if err != nil {
 		s.log.Error(err)
 	}

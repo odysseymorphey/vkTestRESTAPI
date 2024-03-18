@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/odysseymorphey/vkTestRESTAPI/internal/dto"
 	"net/http"
 	"strconv"
@@ -83,6 +84,15 @@ func (s *Server) deleteActor(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) createMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
+
+		var movie dto.Movie
+		err := json.NewDecoder(r.Body).Decode(&movie)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			s.log.Error(err)
+		}
+
+		fmt.Fprint(w, movie)
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
