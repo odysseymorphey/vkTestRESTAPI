@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/odysseymorphey/vkTestRESTAPI/internal/dto"
 	"net/http"
 	"strconv"
@@ -91,6 +92,8 @@ func (s *Server) createMovie(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			s.log.Error(err)
 		}
+
+		fmt.Fprint(w, movie)
 
 		err = s.svc.CreateMovie(ctx, movie)
 		if err != nil {

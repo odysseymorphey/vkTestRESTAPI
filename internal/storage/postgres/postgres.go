@@ -113,16 +113,21 @@ func (s *Storage) CreateMovie(ctx context.Context, movie dto.Movie) error {
 					 )
 					 RETURNING actor_id`
 
-	var actorsID []int
 	for _, v := range movie.Actors {
-		var id int
-		err := s.db.QueryRow(ctx, insertActor, v.Name, v.Gender, v.BirthDate).Scan(&id)
+		_, err := s.db.Exec(ctx, insertActor, v.Name, v.Gender, v.BirthDate)
 		if err != nil {
 			s.log.Error(err)
-			return err
 		}
+	}
 
-		actorsID = append(actorsID, id)
+	searchActor := `SELECT actor_id FROM actors
+					WHERE actor_name = $1 AND gender = $2 AND birthdate = $3`
+
+	var actID int
+	var actorsID []int
+	for _, v := range movie.Actors {
+		s.db.QueryRow(ctx, searchActor, v.Name, v.Gender, v.BirthDate).Scan(&actID)
+		actorsID = append(actorsID, actID)
 	}
 
 	insertMovie := `INSERT INTO movies (title, description, release_date, rating)
@@ -136,7 +141,6 @@ func (s *Storage) CreateMovie(ctx context.Context, movie dto.Movie) error {
 	err := s.db.QueryRow(ctx, insertMovie, movie.Title, movie.Description, movie.Release, movie.Rating).Scan(&movieID)
 	if err != nil {
 		s.log.Error(err)
-		return err
 	}
 
 	insertRelation := `INSERT INTO relations (actor_id, movie_id)

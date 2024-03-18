@@ -31,6 +31,7 @@ func NewServer(log *zap.SugaredLogger, svc FilmaryService, port int) (*Server, e
 	mux.HandleFunc("/updateActor", server.updateActor)
 	mux.HandleFunc("/deleteActor", server.deleteActor)
 	mux.HandleFunc("/createMovie", server.createMovie)
+	mux.HandleFunc("/deleteMovie", server.deleteMovie)
 
 	return server, nil
 }
