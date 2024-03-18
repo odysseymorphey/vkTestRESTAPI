@@ -84,6 +84,7 @@ func (s *Server) deleteActor(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) createMovie(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
+		ctx := r.Context()
 
 		var movie dto.Movie
 		err := json.NewDecoder(r.Body).Decode(&movie)
@@ -93,6 +94,11 @@ func (s *Server) createMovie(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Fprint(w, movie)
+
+		err = s.svc.CreateMovie(ctx, movie)
+		if err != nil {
+
+		}
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
