@@ -62,3 +62,12 @@ func (s *FilmaryService) CreateMovie(ctx context.Context, movie dto.Movie) error
 
 	return err
 }
+
+func (s *FilmaryService) DeleteMovie(ctx context.Context, movie dto.Movie) error {
+	err := s.storage.DeleteMovie(ctx, movie)
+	if err != nil {
+		s.log.Error(err)
+	}
+
+	return err
+}
