@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/odysseymorphey/vkTestRESTAPI/internal/dto"
 	"net/http"
 	"strconv"
@@ -93,14 +92,39 @@ func (s *Server) createMovie(w http.ResponseWriter, r *http.Request) {
 			s.log.Error(err)
 		}
 
-		fmt.Fprint(w, movie)
-
 		err = s.svc.CreateMovie(ctx, movie)
 		if err != nil {
-
+			s.log.Error(err)
 		}
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	} else {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		s.log.Error("Method not allowed: ", r.Method)
 	}
+}
+
+func (s *Server) deleteMovie(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodDelete {
+		ctx := r.Context()
+
+		var movie dto.Movie
+		err := json.NewDecoder(r.Body).Decode(&movie)
+		if err != nil {
+			s.log.Error(err)
+		}
+
+		err = s.svc.DeleteMovie(ctx, movie)
+		if err != nil {
+			s.log.Error(err)
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	} else {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		s.log.Error("Method not allowed: ", r.Method)
+	}
+
 }

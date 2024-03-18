@@ -89,6 +89,7 @@ func (s *Storage) DeleteActor(ctx context.Context, id int) error {
 	_, err := s.db.Exec(ctx, query, id)
 	if err != nil {
 		s.log.Error(err)
+		return err
 	}
 
 	query = `DELETE FROM actors
@@ -118,6 +119,7 @@ func (s *Storage) CreateMovie(ctx context.Context, movie dto.Movie) error {
 		err := s.db.QueryRow(ctx, insertActor, v.Name, v.Gender, v.BirthDate).Scan(&id)
 		if err != nil {
 			s.log.Error(err)
+			return err
 		}
 
 		actorsID = append(actorsID, id)
@@ -134,6 +136,7 @@ func (s *Storage) CreateMovie(ctx context.Context, movie dto.Movie) error {
 	err := s.db.QueryRow(ctx, insertMovie, movie.Title, movie.Description, movie.Release, movie.Rating).Scan(&movieID)
 	if err != nil {
 		s.log.Error(err)
+		return err
 	}
 
 	insertRelation := `INSERT INTO relations (actor_id, movie_id)
@@ -147,8 +150,29 @@ func (s *Storage) CreateMovie(ctx context.Context, movie dto.Movie) error {
 		_, err := s.db.Exec(ctx, insertRelation, v, movieID)
 		if err != nil {
 			s.log.Error(err)
+			return err
 		}
 	}
 
-	return nil
+	return err
+}
+
+func (s *Storage) DeleteMovie(ctx context.Context, movie dto.Movie) error {
+	query := `DELETE FROM relations
+			  WHERE movie_id = $1`
+
+	_, err := s.db.Exec(ctx, query, movie.MovieID)
+	if err != nil {
+		s.log.Error(err)
+		return err
+	}
+
+	query = `DELETE FROM movies
+			 WHERE movie_id = $1`
+	_, err = s.db.Exec(ctx, query, movie.MovieID)
+	if err != nil {
+		s.log.Error(err)
+	}
+
+	return err
 }
